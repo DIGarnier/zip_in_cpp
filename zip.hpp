@@ -26,6 +26,6 @@ namespace detail
 template<typename... List>
 constexpr auto zip(const List& ...lists)
 {
-    constexpr auto [min, max] = std::minmax({std::tuple_size_v<List>...});
+    constexpr auto min = std::min({std::tuple_size_v<List>...});
     return detail::zip(std::make_index_sequence<min>{}, lists...);
 }
