@@ -10,10 +10,10 @@
 namespace detail
 {
     template<std::size_t I, typename ...List>
-	constexpr auto tuple_Nt_elements(const List& ...lists)
-	{
-		return std::tuple{std::ref(get<I>(lists))...};
-	}
+    constexpr auto tuple_Nt_elements(const List& ...lists)
+    {
+        return std::tuple{std::ref(get<I>(lists))...};
+    }
 
     template<typename... List, std::size_t... Is>
     constexpr auto zip(std::index_sequence<Is...>, const List&... lists)
