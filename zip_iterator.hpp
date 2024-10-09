@@ -34,7 +34,7 @@ public:
 
     bool operator!=(zip_iterator& other)
     {
-        return get_Nt_tuple() != other.get_Nt_tuple();
+        return position != other.position;
     }
 
     auto operator*(){ return get_Nt_tuple();};
