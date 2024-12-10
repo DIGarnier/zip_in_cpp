@@ -12,8 +12,8 @@ template<typename T, std::size_t N>
 constexpr auto underlying_type<std::array<T, N>> = T{};
 
 // specialization for std::vector
-template<template<typename, typename ...> typename X, typename T, typename ...Args>
-constexpr auto underlying_type<X<T, Args...>> = T{};
+template<typename T, typename ...Args>
+constexpr auto underlying_type<std::vector<T, Args...>> = T{};
 
  // specialization for c-array
 template<typename T, std::size_t N>
