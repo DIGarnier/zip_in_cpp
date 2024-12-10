@@ -10,7 +10,7 @@ class zip_iterator
 public:
     explicit zip_iterator(List& ...lists)
     {
-        begin_ptrs = {static_cast<const void*>(std::data(lists))...};
+        ptrs = {std::data(lists)...};
         size = std::min({std::size(lists)...});
     }
 
@@ -28,7 +28,13 @@ public:
     }
     zip_iterator& operator++()
     {
-        ++position;
+        next(seq);
+        return *this;
+    }
+
+    zip_iterator& operator--()
+    {
+        previous(seq);
         return *this;
     }
 
@@ -37,24 +43,26 @@ public:
         return position != other.position;
     }
 
-    auto operator*(){ return get_Nt_tuple();};
-
-    auto get_Nt_tuple()
-    {
-        return get_Nt_tuple_impl(seq);
-    }
+    auto& operator*() { return *reinterpret_cast<std::tuple<underlying_type_t<List>&...>*>(&ptrs); }
 
 private:
 
     template<std::size_t... Is>
-    auto get_Nt_tuple_impl(std::index_sequence<Is...>)
+    void next(const std::index_sequence<Is...>&)
     {
-        return std::tuple{*(static_cast<underlying_type_t<List> *>(begin_ptrs[Is]) + position)...};
+        ++position;
+        (std::get<Is>(ptrs)++,...);
+    }
+
+    template<std::size_t... Is>
+    void previoust(const std::index_sequence<Is...>&)
+    {
+        --position;
+        (std::get<Is>(ptrs)--,...);
     }
 
     std::size_t position{};
     std::size_t size{};
-    std::array<const void*, sizeof...(List)> begin_ptrs;
-    decltype(std::make_index_sequence<sizeof...(List)>{}) seq{};
+    std::tuple<underlying_type_t<List>*...> ptrs;
+    static constexpr decltype(std::make_index_sequence<sizeof...(List)>{}) seq{};
 };
-
