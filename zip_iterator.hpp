@@ -55,7 +55,7 @@ private:
     }
 
     template<std::size_t... Is>
-    void previoust(const std::index_sequence<Is...>&)
+    void previous(const std::index_sequence<Is...>&)
     {
         --position;
         (std::get<Is>(ptrs)--,...);
